@@ -115,7 +115,7 @@ class MyTaskRobot():
                         raise NoneTypeError("值不得為None")
                     elif (now_case.split()[0] != case.split()[0]):
                         
-                        TaskRobot.find_element(by = By.XPATH, value = '//*[@id="dt-accepted"]/tbody/tr[1]/td[7]/button').click()
+                        TaskRobot.find_element(by=By.XPATH, value='//*[@class="btn btn-info"]').click()
                         # //*[@id="dt-accepted"]/tbody/tr[1]/td[7]/button
                         # //*[@id="dt-accepted"]/tbody/tr[1]/td[7]/button
                         # or self._WaitTheElement(wait, By.XPATH, '//*[@class="btn btn-info"]')
