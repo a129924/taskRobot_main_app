@@ -6,8 +6,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from datetime import datetime
 import configparser, requests
-import schedule, time
+import time
 
+from dataclasses import dataclass
 from urllib3.exceptions import NewConnectionError
 
 class NoneTypeError(Exception):
@@ -18,22 +19,26 @@ class NoneTypeError(Exception):
 class MyTaskRobot():
     def __init__(self, account:str = None, password:str = None, tasks:int = 2):
         parser = configparser.ConfigParser()
-        login_info = parser.read(r".\login_info.ini")
-        url = parser.read(r".\task.url.ini")
+        parser.read("login_info.ini")
+        parser.read(r".\task.url.ini")
         
-        self._account = account if account else login_info["login_infomation"]["account"]
-        self._password = password if password else login_info["login_infomation"]["password"]
+        login_info = parser["login_infomation"]
+        url = parser["url"]
+        
+        self._account = account if account else login_info["account"]
+        self._password = password if password else login_info["password"]
         self._tasks = tasks
-        
-        self._login_url = url["url"]["login_url"]
-        self._home_url = url["url"]["home_url"]
-        self._dolltask_url = url["url"]["dolltask_url"]
+
+        self._login_url = url["login_url"]
+        self._home_url = url["home_url"]
+        self._dolltask_url = url["dolltask_url"]
         
         self._SetWebDriver()
     
     def _SetWebDriver(self):
         opt = webdriver.ChromeOptions()
-        self.TaskRobot = webdriver.Chrome(options=opt)       
+        self.TaskRobot = webdriver.Chrome(
+            executable_path=r"D:\code\python\CODE\TaskRobot\chrome_driver\chromedriver.exe", options=opt)
         
     def _WaitTheElement(self, wait, locator, element:str) :# bool
         try:
@@ -128,7 +133,9 @@ class MyTaskRobot():
                 except NoneTypeError as error:
                     print(f"引發異常: {repr(error)}")
                     break
-        
+                except Exception as e:
+                    print(e)
+                    break
         return False                    
     # %%
 if __name__ == "__main__":
