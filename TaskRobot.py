@@ -102,14 +102,14 @@ class MyTaskRobot():
             if self._WaitTheElement(wait, By.XPATH, '//*[@id="dt-accepted"]/thead/tr/th[1]'):
                 time.sleep(0.5)
                 case:str = TaskRobot.find_elements(by = By.XPATH, value ='//*[@id="dt-accepted"]/tbody')[0].text
-                
+                print("case:", case)
             print("開始執行...")
             print("##########################")
             while True:
                 try: 
-                    if self._WaitTheElement(wait, By.XPATH, '//*[@id="dt-accepted"]/thead/tr/th[1]'):
-                        time.sleep(0.5)
-                        now_case:str = TaskRobot.find_elements(by = By.XPATH, value ='//*[@id="dt-accepted"]/tbody')[0].text
+                    if self._WaitTheElement(wait, By.XPATH, '//*[@id="dt-accepted"]/tbody'):
+                        now_case:str = TaskRobot.find_elements(by = By.XPATH, value ='//*[@id="dt-accepted"]/tbody')[0].text if now_case else case
+                        time.sleep(0.1)
                     elif self._WaitTheElement(wait, By.XPATH, '//*[@id="dt-feedback"]/thead/tr'):
                         break
                     else:
@@ -125,8 +125,11 @@ class MyTaskRobot():
                         # //*[@id="dt-accepted"]/tbody/tr[1]/td[7]/button
                         # or self._WaitTheElement(wait, By.XPATH, '//*[@class="btn btn-info"]')
                         # //*[@id="dt-accepted"]/tbody/tr[2]/td[7]/button
-                        case = now_case
+                        case:str = now_case
                         self._tasks -= 1
+                    # print("=====================")
+                    # print("try:", now_case)
+                    # print("=====================")
 
                     print(f"[{datetime.now().strftime('%Y-%m-%d, %H:%M:%S')}] now_case: {now_case.split()[0]} case: {case.split()[0]}")
                     TaskRobot.refresh()            
@@ -135,6 +138,8 @@ class MyTaskRobot():
                     break
                 except Exception as e:
                     print(e)
+                    print("case:",case)
+                    print("now_case:", len(now_case))
                     break
         return False                    
     # %%
